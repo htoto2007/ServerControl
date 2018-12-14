@@ -3,66 +3,38 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+
 
 namespace ServerControl
 {
     class Program
     {
-        Thread thread = new Thread();
-        
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        private void checkServerStatus()
-        {
-
-        }
-
-        private string getCurrentPathFtp()
-        {
-
-        }
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
 
         static void Main(string[] args)
         {
+            //ShowWindow(GetConsoleWindow(), 0); // Скрыть.
+            //ShowWindow(GetConsoleWindow(), 1); // Показать.
+            //var icon = new NotifyIcon();
+            //icon.Icon = new Icon("icon.ico");
+            //icon.Visible = true;
+
             
-
-            if (args.GetLength(0) < 2)
-            {
-                Console.WriteLine("Не хватае аргументов! ");
-                Console.ReadKey();
-                return;
-            }
-
-            Console.WriteLine("---args----");
-            foreach (var arg in args)
-            {
-                Console.WriteLine(arg);
-            }
-            Console.WriteLine(" ");
-
-            if (!File.Exists("currentDirectory.txt"))
-            {
-                Console.WriteLine("Отсутствует currentDirectory.txt");
-                Console.ReadKey();
-                return;
-            }
-            string[] currentDirectory = File.ReadLines("currentDirectory.txt", Encoding.Default).ToArray<string>();
-            switch (args[0])
-            {
-                case "ftp":
-                    string ftpPath = currentDirectory[0] + "\\FileZilla Server.exe";
-                    if (!File.Exists(ftpPath)){
-                        Console.WriteLine(ftpPath + " not found!");
-                        Console.ReadKey();
-                        return;
-                    }
-                    Process.Start(ftpPath, args[1]);
-                    break;
-            }
-            Console.WriteLine("Complete...");
+            ClassFTP classFTP = new ClassFTP();
+            while(true) classFTP.checkStatus();
+            Console.WriteLine("Программа заканчивает рботу.");
             Console.ReadKey();
         }
+        
     }
 }
