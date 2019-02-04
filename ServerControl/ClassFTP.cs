@@ -51,8 +51,7 @@ namespace ServerControl
         {
             if (!File.Exists(fileForPath))
             {
-                Console.WriteLine("Отсутствует " + fileForPath);
-                return "";
+                File.WriteAllText(fileForPath, Environment.CurrentDirectory, Encoding.Unicode);
             }
             string[] currentDirectory = File.ReadAllLines(fileForPath, Encoding.Default);
             if (currentDirectory.GetLength(0) < 1)
